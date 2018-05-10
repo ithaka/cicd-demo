@@ -1,0 +1,9 @@
+{
+  "name": "hello",
+  "version": "1.0.0",
+  "main": "hello.js",
+  "license": "Apache",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
