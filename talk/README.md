@@ -6,7 +6,9 @@ Jenkins approach is to have Groovy files, where most of the other players use ya
 
 
 ### Shift Left
-From [Kubecon 2017 Deploying to Kubernetes Thousands of Times Per/Day - Dan Garfield, Codefresh & William Denniss, Google](https://schd.ws/hosted_files/kccncna17/2c/Kubecon%20-%20Deploying%20Thousands.pdf):
+From [Kubecon 2017 Deploying to Kubernetes Thousands of Times Per/Day - Dan Garfield, Codefresh & William Denniss, Google](https://schd.ws/hosted_files/kccncna17/2c/Kubecon%20-%20Deploying%20Thousands.pdf)
+
+In the Typical Dev/Release Process, Staging becomes a bottleneck, so the solution is to Shift Left so feedback is continuously provided on the feature branch.
 
 ![alt text](../images/ShiftLeft.png)
 
