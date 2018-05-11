@@ -1,0 +1,12 @@
+version: '3'
+services:
+  service:
+    build: ./src
+    image: cicd-demo-service
+    ports:
+    - "3000"
+  tests:
+    build: ./integration
+    image: cicd-demo-tests
+    environment:
+      - BASE_URL=http://service:3000
