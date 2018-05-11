@@ -18,7 +18,7 @@ describe "the service" do
     end
 
     Timeout::timeout(5) do
-      agent.get(base_url)
+      response = agent.get(base_url)
 
       expect(response.body).to eq "Hello World!"
     end
