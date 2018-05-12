@@ -10,11 +10,11 @@
 
 * Workflow Example
 
-<img src="../images/Continuous_Delivery_Pipeline.svg" width="600" />
+<img src="../images/Continuous_Delivery_Pipeline.svg" width="800" />
 
 From [Continuous Delivery on Wikipedia](https://en.wikipedia.org/wiki/Continuous_delivery)
 
-<img src="../images/Continuous_Delivery_process_diagram.svg" width="600" />
+<img src="../images/Continuous_Delivery_process_diagram.svg" width="800" />
 
 
 ### Pipeline As Code
