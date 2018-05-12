@@ -9,6 +9,9 @@ RUN apk add --update \
 
 RUN apk update && apk add 
 
+RUN adduser -S ruby
+USER ruby
+
 RUN gem install bundler
 
 WORKDIR $HOME/specs
