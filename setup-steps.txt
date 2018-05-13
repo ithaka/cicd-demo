@@ -3,13 +3,17 @@ Requirements -
 homebrew installed
 
 Install kubectl -
-brew install kubectl
+brew install kubectl on Mac for others: https://kubernetes.io/docs/tasks/tools/install-kubectl/
 
 
 Install minikube -
 brew cask install minikube
+Or https://github.com/kubernetes/minikube/releases
+
+
+Needs Virtual Box installed: https://www.virtualbox.org/wiki/Downloads
 minikube config set disk-size 40000MB
-minikube start
+minikube start (takes some time 2-3 minutes)
 minikube status (should show status as running)
 
 (instructions for other platforms: https://github.com/kubernetes/minikube/releases)
@@ -38,4 +42,7 @@ printf $(kubectl get secret --namespace default jenkins -o jsonpath="{.data.jenk
 may need to delete pod once if it dashboard shows 'pod has unbound PersistentVolumeClaims' -
 kubectl get pods
 kubectl delete jenkins-*****
+
+Jenkins slaves in K8s: https://blog.jsjs.org/?p=165
+
 
