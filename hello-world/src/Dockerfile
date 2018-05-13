@@ -1,5 +1,4 @@
 FROM node:10.1.0-alpine
-
 EXPOSE 3000
 
 WORKDIR /app
@@ -9,4 +8,5 @@ RUN npm install
 
 COPY hello.js .
 
+USER node
 CMD ["node", "hello.js"]
