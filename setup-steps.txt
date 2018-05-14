@@ -35,8 +35,7 @@ cd cicd-demo
 
 Install jenkins chart -
 helm install --name jenkins stable/jenkins --values jenkins/values.yaml
-minikube service jenkins --url (gets the url for jenkins. Username is admin and password is output of command right below this)
-printf $(kubectl get secret --namespace default jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+minikube service jenkins --url (gets the url for jenkins. Username and password is admin)
 
 
 may need to delete pod once if it dashboard shows 'pod has unbound PersistentVolumeClaims' -

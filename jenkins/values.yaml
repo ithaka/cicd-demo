@@ -17,7 +17,7 @@ Master:
   Component: "jenkins-master"
   UseSecurity: true
   AdminUser: admin
-  # AdminPassword: <defaults to random>
+  AdminPassword: admin
   Cpu: "200m"
   Memory: "256Mi"
   # Environment variables that get added to the init container (useful for e.g. http_proxy)
@@ -177,7 +177,7 @@ NetworkPolicy:
 
 ## Install Default RBAC roles and bindings
 rbac:
-  install: false
+  install: true
   serviceAccountName: default
   # RBAC api version (currently either v1beta1 or v1alpha1)
   apiVersion: v1beta1
