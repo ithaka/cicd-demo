@@ -1,0 +1,48 @@
+Requirements -
+40gb free space
+homebrew installed
+
+Install kubectl -
+brew install kubectl on Mac for others: https://kubernetes.io/docs/tasks/tools/install-kubectl/
+
+
+Install minikube -
+brew cask install minikube
+Or https://github.com/kubernetes/minikube/releases
+
+
+Needs Virtual Box installed: https://www.virtualbox.org/wiki/Downloads
+minikube config set disk-size 40000MB
+minikube start (takes some time 2-3 minutes)
+minikube status (should show status as running)
+
+(instructions for other platforms: https://github.com/kubernetes/minikube/releases)
+'minikube dashboard' brings up dashboard
+
+
+Install helm -
+brew install kubernetes-helm
+(instructions for other platforms: https://docs.helm.sh/using_helm/#installing-helm)
+
+Initialize helm -
+helm init --service-account default
+kubectl get pods -n kube-system (should see tiller pod)
+helm repo update
+
+Clone repo -
+git clone git@github.com:ithaka/cicd-demo.git
+cd cicd-demo
+
+Install jenkins chart -
+helm install --name jenkins stable/jenkins --values jenkins/values.yaml
+minikube service jenkins --url (gets the url for jenkins. Username is admin and password is output of command right below this)
+printf $(kubectl get secret --namespace default jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+
+
+may need to delete pod once if it dashboard shows 'pod has unbound PersistentVolumeClaims' -
+kubectl get pods
+kubectl delete jenkins-*****
+
+Jenkins slaves in K8s: https://blog.jsjs.org/?p=165
+
+
