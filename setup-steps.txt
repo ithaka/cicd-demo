@@ -43,6 +43,6 @@ may need to delete pod once if it dashboard shows 'pod has unbound PersistentVol
 kubectl get pods
 kubectl delete jenkins-*****
 
-Jenkins slaves in K8s: https://blog.jsjs.org/?p=165
+set executors to something higher than 0
 
 
