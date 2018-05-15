@@ -39,7 +39,7 @@ podTemplate(label: 'test', cloud: 'kubernetes',
             }}
           )
       }
-      catch(){}
+      catch(e){}
       finally{
           container('kubectl'){
               stage('undeploy app'){
