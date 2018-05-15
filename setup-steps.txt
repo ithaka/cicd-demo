@@ -45,4 +45,5 @@ kubectl delete jenkins-*****
 
 set executors to something higher than 0
 
-
+add personal access token, or else api is limited to 60 requests per hour
+create multibranch pipeline, add branch source (owner ithaka, repository cicd-demo, behaviors just discover branches)
