@@ -13,12 +13,12 @@ podTemplate(label: 'test', cloud: 'kubernetes',
       TESTS_DOCKER_TAG = "cicd-demo-tests:${VERSION_IDENTIFIER}"
       container('docker'){
         parallel(
-          stage('build app'){
+          'buildApp': {stage('build app'){
             sh "docker build -f ./hello-world/src/Dockerfile -t ${APP_DOCKER_TAG}  ./hello-world/src"
-          },
-          stage('build tests'){
+          }},
+          'buildTests': {stage('build tests'){
             sh "docker build -f ./hello-world/integration/Dockerfile -t ${TESTS_DOCKER_TAG} ./hello-world/integration"
-          }
+          }}
         )
       }
     }
