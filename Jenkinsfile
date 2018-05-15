@@ -31,12 +31,12 @@ podTemplate(label: 'test', cloud: 'kubernetes',
           parallel(
             'unitTests': {stage('unit tests'){
                 container('node-alpine'){
-                    sh 'npm install && npm run test'
+                    sh 'cd hello-world/src && npm install && npm run test'
                 }
             }},
             'integrationTests': {stage('integration tests'){
                 container('kubectl'){
-                    sh "kubectl run --env=\"BASE_URL=http://cicd-demo-service:3000\" ${TESTS_DOCKER_TAG} --image=${TESTS_DOCKER_TAG}"
+                    sh "kubectl run --env=\"BASE_URL=http://cicd-demo-service:3000\" cicd-demo-integration-tests-${GIT_COMMIT} --image=${TESTS_DOCKER_TAG} --restart=\"Never\""
                 }
             }}
           )
