@@ -1,0 +1,27 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.name}}
+  namespace: default
+  labels:
+    app: {{ .Values.name }}
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+    chart: "{{ .Chart.Name }}-{{ .Values.tag}}"
+spec:
+  ports:
+  - name: http
+    protocol: TCP
+    port: 3000
+    targetPort: 3000
+    nodePort: 30072
+  selector:
+    app: {{ .Values.name }}
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+    chart: "{{ .Chart.Name }}-{{ .Values.tag}}"
+  type: NodePort
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
+status:
+  loadBalancer: {}

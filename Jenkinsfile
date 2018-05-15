@@ -2,7 +2,7 @@ podTemplate(label: 'test', cloud: 'kubernetes',
         containers: [
                 containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
                 containerTemplate(name: 'kubectl', image: 'dtzar/helm-kubectl', ttyEnabled: true, command: 'cat'),
-                containerTemplate(name: 'nodeJS', image:'node:10.1.0-alpine', ttyEnabled: true, command: 'cat')
+                containerTemplate(name: 'node-alpine', image:'node:10.1.0-alpine', ttyEnabled: true, command: 'cat')
         ], volumes: [hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]){
 
     node("test") {
@@ -30,7 +30,7 @@ podTemplate(label: 'test', cloud: 'kubernetes',
           }
           parallel(
             'unitTests': {stage('unit tests'){
-                container('nodeJS'){
+                container('node-alpine'){
                     sh 'npm install && npm run test'
                 }
             }},
