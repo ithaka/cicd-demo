@@ -25,7 +25,7 @@ spec:
       containers:
         - name: {{ .Values.name }}
           image: {{ .Values.image }}:{{ .Values.tag }}
-          imagePullPolicy: always
+          imagePullPolicy: IfNotPresent
           env:
             - name: PORT
               value: {{.Values.ContainerPort}}
