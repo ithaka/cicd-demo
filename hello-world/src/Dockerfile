@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package.json .
 RUN npm install
 
-COPY *.js .
+COPY *.js ./
 
 USER node
 CMD ["node", "app.js"]
