@@ -40,6 +40,12 @@ podTemplate(label: 'test', cloud: 'kubernetes',
                 }
             }}
           )
+          timeout(time: 60, unit: 'SECONDS') {
+              input(id: 'Proceed1', message: 'Was this successful?',
+                    parameters: [
+                      [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm that this deployment succeeded']
+                    ])
+          }
       }
       catch(e){
         container('kubectl'){
