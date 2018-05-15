@@ -6,7 +6,7 @@ metadata:
     heritage: {{ .Release.Service | quote }}
     release: {{ .Release.Name | quote }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "{{ .Release.Name }}-{{ .Values.Master.Name }}"
+    component: "{{ .Release.Name }}-{{ .Values.Name }}"
 spec:
   replicas: 1
   strategy:
@@ -44,7 +44,3 @@ spec:
               path: /
               port: http
             initialDelaySeconds: {{ .Values.HealthProbesTimeout }}
-          resources:
-            requests:
-              cpu: "{{ .Values.Master.Cpu }}"
-              memory: "{{ .Values.Master.Memory }}"

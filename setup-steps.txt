@@ -19,7 +19,7 @@ minikube status (should show status as running)
 (instructions for other platforms: https://github.com/kubernetes/minikube/releases)
 'minikube dashboard' brings up dashboard
 
-Add admin privileges to default role -
+Add admin privileges to default role (not recommended in real life) -
 kubectl create clusterrolebinding kube-system-default-superadmin \
   --clusterrole=cluster-admin \
   --serviceaccount=default:default
@@ -49,5 +49,5 @@ kubectl delete jenkins-*****
 
 set executors to something higher than 0
 
-add personal access token, or else api is limited to 60 requests per hour
+add Github personal access token, or else api is limited to 60 requests per hour
 create multibranch pipeline, add branch source (owner ithaka, repository cicd-demo, behaviors just discover branches)
