@@ -23,7 +23,8 @@ podTemplate(label: 'test', cloud: 'kubernetes',
       }
       container('kubectl'){
         stage('deploy app'){
-            sh "helm upgrade --install --force --tiller-namespace default --values ./hello-world/chart/values.yaml hello-world-app-${GIT_BRANCH} ./hello-world/chart/"
+            sh 'ls ./hello-world/chart/'
+            sh "helm upgrade --install --force --tiller-namespace default --values ./hello-world/chart/values.yaml hello-world-app-${GIT_BRANCH} ./hello-world/chart"
         }
       }
 
