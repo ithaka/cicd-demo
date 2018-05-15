@@ -21,5 +21,10 @@ podTemplate(label: 'test', cloud: 'kubernetes',
           }}
         )
       }
+      container('kubectl'){
+        stage('deploy app'){
+            sh "helm install --name hello-world-app$-{VERSION_IDENTIFIER} --values ./hello-world/values.yaml ./hello-world/Chart.yaml"
+        }
+      }
     }
 }

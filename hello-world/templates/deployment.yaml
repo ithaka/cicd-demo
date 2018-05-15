@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.name }}
-          image: cicd-demo:latest
+          image: {{ .Vales.image }}:{{ .Values.tag }}
           imagePullPolicy: always
           env:
             - name: PORT
