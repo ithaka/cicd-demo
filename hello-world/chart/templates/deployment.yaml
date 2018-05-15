@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+  labels:
+    app: {{ .Values.name }}
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+    chart: "{{ .Chart.Name }}-{{ .Values.tag}}"
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+      heritage: {{ .Release.Service | quote }}
+      release: {{ .Release.Name | quote }}
+      chart: "{{ .Chart.Name }}-{{ .Values.tag}}"
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}
+        heritage: {{ .Release.Service | quote }}
+        release: {{ .Release.Name | quote }}
+        chart: "{{ .Chart.Name }}-{{ .Values.tag}}"
+    spec:
+      containers:
+        - name: {{ .Values.name }}
+          image: {{ .Values.image }}:{{ .Values.tag }}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PORT
+              value: {{.Values.ContainerPort}}
+          ports:
+            - containerPort: {{ .Values.containerPort }}
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: {{ .Values.HealthProbesTimeout }}
+            timeoutSeconds: 5
+            failureThreshold: {{ .Values.HealthProbeLivenessFailureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: {{ .Values.HealthProbesTimeout }}
