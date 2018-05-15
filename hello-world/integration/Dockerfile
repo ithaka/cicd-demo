@@ -19,5 +19,5 @@ WORKDIR $HOME/specs
 COPY . .
 
 RUN gem install bundler && bundle install
-
+ENV GREETING='Hello World!'
 CMD ["rspec", "--format", "doc"]

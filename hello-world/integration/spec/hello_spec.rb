@@ -4,7 +4,7 @@ require 'timeout'
 
 
 base_url = ENV['BASE_URL']
-
+greeting = ENV['GREETING']
 puts "=" * 100
 puts " base url = #{base_url}"
 puts "=" * 100
@@ -20,7 +20,7 @@ describe "the service" do
     Timeout::timeout(5) do
       response = agent.get(base_url)
 
-      expect(response.body).to eq "Hello World!"
+      expect(response.body).to eq greeting
     end
 
   end
