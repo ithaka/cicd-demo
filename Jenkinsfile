@@ -14,7 +14,7 @@ podTemplate(label: 'test', cloud: 'kubernetes',
       container('docker'){
         parallel(
           stage('build app'){
-            sh "docker build -f ./hello-world/src/Dockerfile' -t ${APP_DOCKER_TAG}  ./hello-world/src"
+            sh "docker build -f ./hello-world/src/Dockerfile -t ${APP_DOCKER_TAG}  ./hello-world/src"
           },
           stage('build tests'){
             sh "docker build -f ./hello-world/integration/Dockerfile -t ${TESTS_DOCKER_TAG} ./hello-world/integration"
