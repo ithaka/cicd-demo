@@ -1,8 +1,3 @@
-source_code = checkout(scm)
-GIT_COMMIT = source_code.GIT_COMMIT.substring(0, 6).toLowerCase()
-GIT_BRANCH = source_code.GIT_BRANCH.replaceAll('origin/', '').toLowerCase()
-VERSION_IDENTIFIER = "${GIT_BRANCH}-${GIT_COMMIT}"
-
 podTemplate(label: 'test', cloud: 'kubernetes',
         containers: [
                 containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
@@ -10,6 +5,10 @@ podTemplate(label: 'test', cloud: 'kubernetes',
         ], volumes: [hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]){
 
     node("test") {
+      source_code = checkout(scm)
+      GIT_COMMIT = source_code.GIT_COMMIT.substring(0, 6).toLowerCase()
+      GIT_BRANCH = source_code.GIT_BRANCH.replaceAll('origin/', '').toLowerCase()
+      VERSION_IDENTIFIER = "${GIT_BRANCH}-${GIT_COMMIT}"
       container('docker'){
         parallel{
           stage('build app'){
