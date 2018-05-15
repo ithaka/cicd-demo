@@ -41,14 +41,18 @@ podTemplate(label: 'test', cloud: 'kubernetes',
             }}
           )
       }
-      catch(e){}
-      finally{
-          container('kubectl'){
-              stage('undeploy app'){
-                  sh "helm delete --tiller-namespace default hello-world-app-${GIT_BRANCH}"
-              }
+      catch(e){
+        container('kubectl'){
+            stage('undeploy app'){
+                sh "helm delete --tiller-namespace default hello-world-app-${GIT_BRANCH}"
+            }
+        }
+        throw e
+      }
+      container('kubectl'){
+          stage('undeploy app'){
+              sh "helm delete --tiller-namespace default hello-world-app-${GIT_BRANCH}"
           }
       }
-
     }
 }
