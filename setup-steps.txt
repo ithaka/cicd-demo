@@ -19,6 +19,10 @@ minikube status (should show status as running)
 (instructions for other platforms: https://github.com/kubernetes/minikube/releases)
 'minikube dashboard' brings up dashboard
 
+Add admin privileges to default role -
+kubectl create clusterrolebinding kube-system-default-superadmin \
+  --clusterrole=cluster-admin \
+  --serviceaccount=default:default
 
 Install helm -
 brew install kubernetes-helm
