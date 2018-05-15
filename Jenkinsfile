@@ -23,7 +23,13 @@ podTemplate(label: 'test', cloud: 'kubernetes',
       }
       container('kubectl'){
         stage('deploy app'){
-            sh "helm upgrade --install --tiller-namespace default --values ./hello-world/values.yaml hello-world-app-${GIT_BRANCH} ./hello-world/"
+            sh "helm upgrade --install --force --tiller-namespace default --values ./hello-world/values.yaml hello-world-app-${GIT_BRANCH} ./hello-world/"
+        }
+      }
+
+      container('kubectl'){
+        stage('undeploy app'){
+            sh "helm delete hello-world-app-${GIT_BRANCH}"
         }
       }
     }
