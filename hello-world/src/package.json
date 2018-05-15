@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "app.js",
   "license": "Apache",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "express": "^4.16.3"
   },
