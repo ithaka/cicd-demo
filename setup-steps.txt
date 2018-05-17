@@ -29,7 +29,7 @@ brew install kubernetes-helm
 (instructions for other platforms: https://docs.helm.sh/using_helm/#installing-helm)
 
 Initialize helm -
-helm init --service-account default
+helm init --service-account default --tiller-namespace default
 kubectl get pods -n kube-system (should see tiller pod)
 helm repo update
 
