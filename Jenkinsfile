@@ -51,7 +51,7 @@ podTemplate(label: 'test', cloud: 'kubernetes',
         container('kubectl'){
             stage('undeploy app'){
                 sh "helm delete --tiller-namespace default hello-world-app-${GIT_BRANCH}"
-                sh "kubectl delete cicd-demo-integration-tests-${GIT_COMMIT}"
+                sh "kubectl delete --all cicd-demo-integration-tests-${GIT_COMMIT}"
             }
         }
         throw e
@@ -59,7 +59,7 @@ podTemplate(label: 'test', cloud: 'kubernetes',
       container('kubectl'){
           stage('undeploy app'){
               sh "helm delete --tiller-namespace default hello-world-app-${GIT_BRANCH}"
-              sh "kubectl delete cicd-demo-integration-tests-${GIT_COMMIT}"
+              sh "kubectl delete --all cicd-demo-integration-tests-${GIT_COMMIT}"
           }
       }
     }
