@@ -36,6 +36,7 @@ kubectl create clusterrolebinding kube-system-default-superadmin \
 # Initialize helm
 helm init --service-account default --tiller-namespace default
 export TILLER_NAMESPACE="default"
+
 # should see tiller pod now
 kubectl get pods
 helm repo update
