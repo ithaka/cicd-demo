@@ -12,9 +12,11 @@ Or https://github.com/kubernetes/minikube/releases
 
 
 Needs Virtual Box installed: https://www.virtualbox.org/wiki/Downloads
-minikube config set disk-size 40000MB
+minikube config set disk-size 40000MB (if you already had minikube running in the past, run 'minikube delete')
 minikube start (takes some time 2-3 minutes)
 minikube status (should show status as running)
+
+----- do the above first!!!! -----
 
 (instructions for other platforms: https://github.com/kubernetes/minikube/releases)
 'minikube dashboard' brings up dashboard
@@ -30,7 +32,7 @@ brew install kubernetes-helm
 
 Initialize helm -
 helm init --service-account default --tiller-namespace default
-kubectl get pods -n kube-system (should see tiller pod)
+kubectl get pods (should see tiller pod)
 helm repo update
 
 Clone repo -
@@ -38,7 +40,7 @@ git clone git@github.com:ithaka/cicd-demo.git
 cd cicd-demo
 
 Install jenkins chart -
-helm install --name jenkins stable/jenkins --values jenkins/values.yaml
+helm install --name jenkins stable/jenkins --values jenkins/values.yaml --tiller-namespace=default
 minikube service jenkins --url (gets the url for jenkins. Username and password is admin)
 
 may need to delete pod once if it dashboard shows 'pod has unbound PersistentVolumeClaims' -

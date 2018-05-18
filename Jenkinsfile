@@ -51,7 +51,7 @@ podTemplate(label: 'test', cloud: 'kubernetes',
                     sh "helm delete --tiller-namespace default hello-world-app-${GIT_BRANCH}"
                 }
                 //stage('deploy to prod'){
-                //    sh "helm upgrade --install --force --tiller-namespace default --namespace prod --values ./hello-world/chart/values.yaml hello-world-app-${GIT_BRANCH} ./hello-world/chart"
+                //    sh "helm upgrade --install --force --tiller-namespace default --namespace prod --values ./hello-world/chart/values.yaml hello-world-app ./hello-world/chart"
                 //}
             }
 
