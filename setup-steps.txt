@@ -27,7 +27,6 @@ minikube dashboard
 
 ### do the above asap!!!! ###
 
-
 # Add admin privileges to default role (not recommended in real life) -
 kubectl create clusterrolebinding kube-system-default-superadmin \
   --clusterrole=cluster-admin \
@@ -37,9 +36,9 @@ kubectl create clusterrolebinding kube-system-default-superadmin \
 helm init --service-account default --tiller-namespace default
 # should see tiller pod now
 kubectl get pods
-helm repo update
 
 # Install jenkins using a helm chart
+helm repo update
 helm install --name jenkins stable/jenkins --values jenkins/values.yaml --tiller-namespace=default
 
 # Get the url for jenkins. Username and password is admin
