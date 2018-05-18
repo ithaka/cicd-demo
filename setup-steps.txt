@@ -1,55 +1,57 @@
-Requirements -
-40gb free space
-homebrew installed
+# Requirements -
+# 40gb free space
+# homebrew installed
+# fork repo (https://github.com/ithaka/cicd-demo), then clone and-
+cd cicd-demo
 
-Install kubectl -
-brew install kubectl on Mac for others: https://kubernetes.io/docs/tasks/tools/install-kubectl/
+# Install kubectl -
+brew install kubectl
+# other oses : https://kubernetes.io/docs/tasks/tools/install-kubectl/
 
-
-Install minikube -
+# Install minikube -
 brew cask install minikube
-Or https://github.com/kubernetes/minikube/releases
+# others: https://github.com/kubernetes/minikube/releases
+
+#Install virtualbox on mac
+brew cask install virtualbox
+# others: https://www.virtualbox.org/wiki/Downloads
+
+# if you already had minikube installed with other settings - minikube stop && minikube delete && rm -rf ~/.minikube
+minikube config set disk-size 40000MB
+# start the cluster. This takes some time,  2-3 minutes
+minikube start
+# now your cluster should be running
+minikube status
+minikube dashboard
+
+### do the above asap!!!! ###
 
 
-Needs Virtual Box installed: https://www.virtualbox.org/wiki/Downloads
-minikube config set disk-size 40000MB (if you already had minikube running in the past, run 'minikube delete')
-minikube start (takes some time 2-3 minutes)
-minikube status (should show status as running)
 
------ do the above first!!!! -----
-
-(instructions for other platforms: https://github.com/kubernetes/minikube/releases)
-'minikube dashboard' brings up dashboard
-
-Add admin privileges to default role (not recommended in real life) -
+# Add admin privileges to default role (not recommended in real life) -
 kubectl create clusterrolebinding kube-system-default-superadmin \
   --clusterrole=cluster-admin \
   --serviceaccount=default:default
 
-Install helm -
+# Install helm
 brew install kubernetes-helm
-(instructions for other platforms: https://docs.helm.sh/using_helm/#installing-helm)
+# instructions for other platforms: https://docs.helm.sh/using_helm/#installing-helm
 
-Initialize helm -
+# Initialize helm
 helm init --service-account default --tiller-namespace default
-kubectl get pods (should see tiller pod)
+# should see tiller pod now
+kubectl get pods
 helm repo update
 
-Clone repo -
-git clone git@github.com:ithaka/cicd-demo.git
-cd cicd-demo
-
-Install jenkins chart -
+# Install jenkins using a helm chart
 helm install --name jenkins stable/jenkins --values jenkins/values.yaml --tiller-namespace=default
-minikube service jenkins --url (gets the url for jenkins. Username and password is admin)
+# Get the url for jenkins. Username and password is admin
+# may need to delete pod once if it dashboard shows 'pod has unbound PersistentVolumeClaims'
+minikube service jenkins --url
 
-may need to delete pod once if it dashboard shows 'pod has unbound PersistentVolumeClaims' -
--------  (only do this if you get that error!)
-kubectl get pods
-kubectl delete jenkins-*****
--------
 
-set executors to something higher than 0
+## IN JENKINS ##
 
-add Github personal access token, or else api is limited to 60 requests per hour
-create multibranch pipeline, add branch source (owner ithaka, repository cicd-demo, behaviors just discover branches)
+# In main jenkins settings: set executors to something higher than 0
+#  add Github personal access token, or else api is limited to 60 requests per hour
+# create multibranch pipeline, add branch source (owner ithaka, repository cicd-demo, behaviors just discover branches)
