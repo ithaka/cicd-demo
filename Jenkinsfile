@@ -46,6 +46,16 @@ podTemplate(label: 'test', cloud: 'kubernetes',
                       [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm that this deployment succeeded']
                     ])
           }
+          container('kubectl'){
+                stage('undeploy app'){
+                    sh "helm delete --tiller-namespace default hello-world-app-${GIT_BRANCH}"
+                }
+                //stage('deploy to prod'){
+                //    sh "helm upgrade --install --force --tiller-namespace default --namespace prod --values ./hello-world/chart/values.yaml hello-world-app-${GIT_BRANCH} ./hello-world/chart"
+                //}
+            }
+
+
       }
       catch(e){
         container('kubectl'){
@@ -54,11 +64,6 @@ podTemplate(label: 'test', cloud: 'kubernetes',
             }
         }
         throw e
-      }
-      container('kubectl'){
-          stage('undeploy app'){
-              sh "helm delete --tiller-namespace default hello-world-app-${GIT_BRANCH}"
-          }
       }
     }
 }
