@@ -12,11 +12,11 @@ https://docs.google.com/presentation/d/1hPqTTd8auXvezHbL5u-64NsO4Ka9y4gNYbCJQanP
 
 ![alt text](../images/gitlab-devops-pipeline.png)
 
-* Workflow Example
+* [Workflow Example](../images/Continuous_Delivery_Pipeline.pdf)
 
 <img src="../images/Continuous_Delivery_Pipeline.svg" width="800" />
 
-From [Continuous Delivery on Wikipedia](https://en.wikipedia.org/wiki/Continuous_delivery)
+From [Continuous Delivery on Wikipedia](https://en.wikipedia.org/wiki/Continuous_delivery) - [Download as PNG](../images/Continuous_Delivery_process_diagram.png)
 
 <img src="../images/Continuous_Delivery_process_diagram.svg" width="800" />
 
