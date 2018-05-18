@@ -9,7 +9,7 @@ brew install kubectl
 # other oses : https://kubernetes.io/docs/tasks/tools/install-kubectl/
 
 # Install minikube -
-v
+brew cask install minikube
 # others: https://github.com/kubernetes/minikube/releases
 
 #Install virtualbox on mac
@@ -25,6 +25,7 @@ minikube status
 minikube dashboard
 
 ### do the above asap!!!! ###
+
 
 
 # Add admin privileges to default role (not recommended in real life) -
@@ -47,6 +48,7 @@ helm install --name jenkins stable/jenkins --values jenkins/values.yaml --tiller
 # Get the url for jenkins. Username and password is admin
 # may need to delete pod once if it dashboard shows 'pod has unbound PersistentVolumeClaims'
 minikube service jenkins --url
+
 
 ## IN JENKINS ##
 
