@@ -5,37 +5,33 @@
 cd cicd-demo
 
 # Install kubectl -
-brew install kubectl
+brew install kubectl kubernetes-helm
 # other oses : https://kubernetes.io/docs/tasks/tools/install-kubectl/
+#              https://docs.helm.sh/using_helm/#installing-helm
 
-# Install minikube -
-brew cask install minikube
-# others: https://github.com/kubernetes/minikube/releases
-
-#Install virtualbox on mac
-brew cask install virtualbox
-# others: https://www.virtualbox.org/wiki/Downloads
+# Install minikube and virtualbox -
+brew cask install minikube virtualbox
+# others oses: https://github.com/kubernetes/minikube/releases
+#              https://www.virtualbox.org/wiki/Downloads
 
 # if you already had minikube installed with other settings - minikube stop && minikube delete && rm -rf ~/.minikube
 minikube config set disk-size 40000MB
+
 # start the cluster. This takes some time,  2-3 minutes
 minikube start
+
 # now your cluster should be running
+eval $(minikube docker-env)
 minikube status
 minikube dashboard
 
 ### do the above asap!!!! ###
 
 
-
 # Add admin privileges to default role (not recommended in real life) -
 kubectl create clusterrolebinding kube-system-default-superadmin \
   --clusterrole=cluster-admin \
   --serviceaccount=default:default
-
-# Install helm
-brew install kubernetes-helm
-# instructions for other platforms: https://docs.helm.sh/using_helm/#installing-helm
 
 # Initialize helm
 helm init --service-account default --tiller-namespace default
@@ -45,10 +41,10 @@ helm repo update
 
 # Install jenkins using a helm chart
 helm install --name jenkins stable/jenkins --values jenkins/values.yaml --tiller-namespace=default
+
 # Get the url for jenkins. Username and password is admin
 # may need to delete pod once if it dashboard shows 'pod has unbound PersistentVolumeClaims'
 minikube service jenkins --url
-
 
 ## IN JENKINS ##
 
