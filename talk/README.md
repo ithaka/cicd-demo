@@ -1,3 +1,7 @@
+## Presentation Slides
+
+https://docs.google.com/presentation/d/1hPqTTd8auXvezHbL5u-64NsO4Ka9y4gNYbCJQanPKUI/edit?usp=sharing
+
 ## Continuous Delivery
 
 > More broadly the deployment pipeline's job is to detect any changes that will lead to problems in production. These can include performance, security, or usability issues. A deployment pipeline should enable collaboration between the various groups involved in delivering software and provide everyone visibility about the flow of changes in the system, together with a thorough audit trail.
