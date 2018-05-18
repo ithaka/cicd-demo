@@ -16,6 +16,13 @@ Change the below example from "caspyin" to your github account id:
     --user "caspyin" \
     --data '{"scopes":["repo"],"note":"Minikube-Jenkins-Demo"}'
 
+If you have Multi-Factor Auth (MFA or 2FA) enabled, you will have to send this header along (change 123456 to your MFA code):
+
+    curl -H "X-GitHub-OTP: 123456" \
+    https://api.github.com/authorizations \
+    --user "caspyin" \
+    --data '{"scopes":["repo"],"note":"Minikube-Jenkins-Demo"}'
+
 This will prompt you for your GitHub password and return your OAuth token in the response. It will also create a new Authorized application in your account settings https://github.com/settings/applications
 
 Now that you have the OAuth token there are two ways to use the token to make requests that require authentication (replace "OAUTH-TOKEN" with your actual token)
