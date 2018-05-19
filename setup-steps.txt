@@ -87,7 +87,7 @@ minikube service jenkins --url
 
 # screenshot 6 : this is the console output of your running job. You can get here by clicking on the '#1' next to
 # the running job mentioned in the previous step, then clicking console output.
+# the output should eventually stop to wait for your input on this screen before continuing.
 
-# In main jenkins settings: set executors to something higher than 0
-#  add Github personal access token, or else api is limited to 60 requests per hour
-# create multibranch pipeline, add branch source (owner ithaka, repository cicd-demo, behaviors just discover branches)
+# from here, you're on your own the explore, expand and see how this can help you automate your
+# own actual workflows. Good luck, and we're happy to help to the extent that we can.
