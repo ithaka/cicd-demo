@@ -41,7 +41,7 @@ kubectl get pods
 
 # Install jenkins using a helm chart
 helm repo update
-helm install --name jenkins stable/jenkins --values jenkins/values.yaml
+helm install --name jenkins stable/jenkins --values jenkins/values.yaml --tiller-namespace=default
 # you can ignore most of the message that helm prints after this,
 
 # You may need to delete pod (not deployment) once
