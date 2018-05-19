@@ -41,13 +41,52 @@ kubectl get pods
 
 # Install jenkins using a helm chart
 helm repo update
-helm install --name jenkins stable/jenkins --values jenkins/values.yaml --tiller-namespace=default
+helm install --name jenkins stable/jenkins --values jenkins/values.yaml
+# you can ignore most of the message that helm prints after this,
 
-# Get the url for jenkins. Username and password is admin
-# may need to delete pod once if it dashboard shows 'pod has unbound PersistentVolumeClaims'
+
+# You may need to delete pod (not deployment) once
+# if the dashboard shows 'pod has unbound PersistentVolumeClaims'
+
+# Get the url for jenkins. Username and password is admin. It might take a minute or two for
+# Jenkins to initialize and for the service to be ready.
 minikube service jenkins --url
 
 ## IN JENKINS ##
+# The following screenshots can be found the screenshots directory of this project
+
+# screenshot 1 : you should see the login screen once you visit the url from the command above.
+# Log in with UN: admin and PW: admin
+
+# screenshot 2 : After logging in, you'll be presented with the Jenkins home screen.
+# We'll want to change two settings in the main Jenkins settings,
+# so click 'manage jenkins' then 'configure system'
+
+# screenshot 2a : Set the number of executors to something higher than 0, so Jenkins jobs can run. (why isn't that the default?)
+
+# screenshot 2b & 2c : In the Github Pull Request Builder section, click add to add a credential. It will be a 'secret text'
+# type credential. This needs to be a github personal access token. Instructions for creating this are in the 'talk' directory
+# of this project. Hold on to this token, we'll need it again for a later step and you can't retrieve it from Github
+
+# screenshot 3 : This screen is what you see when you click 'create new job' (or 'new item' from the menu on the left)
+# back on the front page of Jenkins. On this screen, you'll want to enter a name for your job, then select
+# multibranch pipeline (not pipeline or multi-configuration project) and hit ok. This will bring you
+# to the configuration for this pipeline.
+
+# screenshot 4a & b : We need to set up a couple things in this configuration section. First click 'add source'
+# and choose 'github'.  We're going to add credentials again, this time a username and password. The
+# username will be your github username and the password will be the personal access token from step 2c
+
+# screenshot 4c : set the owner field to be your github username and the repository to be your forked
+# version of this repo. Also set the 'discover branches' strategy to be all branches.
+
+# screenshot 5 : Once you apply and save, you will be brought back to the main page for the job you created.
+# Jenkins should have indexed your branches and found that the master branch has a Jenkinsfile.
+# It should start running the pipeline in that branch. In the lower left of the screen (you might have to scroll
+# down) you should see a jenkins slave has started and is starting to run your job.
+
+# screenshot 6 : this is the console output of your running job. You can get here by clicking on the '#1' next to
+# the running job mentioned in the previous step, then clicking console output.
 
 # In main jenkins settings: set executors to something higher than 0
 #  add Github personal access token, or else api is limited to 60 requests per hour
