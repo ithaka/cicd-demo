@@ -80,10 +80,16 @@ Master:
     - kubernetes:1.6.0
     - workflow-aggregator:2.5
     - workflow-job:2.21
+    - credentials
     - credentials-binding:1.16
     - git:3.9.0
+    - git-client
+    - github
+    - github-api
     - ghprb:1.40.0
     - github-branch-source:2.3.4
+    - blueocean:1.5.0
+
   # Used to approve a list of groovy functions in pipelines used the script-security plugin. Can be viewed under /scriptApproval
   # ScriptApproval:
   #   - "method groovy.json.JsonSlurperClassic parseText java.lang.String"
@@ -144,7 +150,7 @@ Agent:
   # jenkins-agent: v1
 
 Persistence:
-  Enabled: true
+  Enabled: false
   ## A manually managed Persistent Volume and Claim
   ## Requires Persistence.Enabled: true
   ## If defined, PVC must be created manually before volume will be bound
@@ -180,7 +186,7 @@ NetworkPolicy:
 ## Install Default RBAC roles and bindings
 rbac:
   install: true
-  serviceAccountName: default
+  serviceAccountName: jenkins
   # RBAC api version (currently either v1beta1 or v1alpha1)
   apiVersion: v1beta1
   # Cluster role reference
