@@ -27,9 +27,9 @@ brew cask install minikube virtualbox
 minikube config set disk-size 40000MB
 ```
 
-### start the cluster. This takes some time,  2-3 minutes
+### start the cluster with RBAC. This takes some time,  2-3 minutes
 ```
-minikube start
+minikube start --extra-config=apiserver.Authorization.Mode=RBAC
 ```
 
 ### now your cluster should be running
