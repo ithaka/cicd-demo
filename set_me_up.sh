@@ -21,9 +21,8 @@ fi
 # minikube config set disk-size 40000MB
 
 # minikube start --disk-size 40g
-
-# #minikube start --extra-config=apiserver.authorization-mode=RBAC
-# #kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
+# minikube start --extra-config=apiserver.authorization-mode=RBAC
+# kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
 # set -e
 
 #
@@ -31,8 +30,10 @@ eval "$(minikube docker-env)"
 minikube status
 
 
-SERVICE_ACCOUNT_NAME=${1:-tiller}
-TILLER_NAMESPACE=${2:-kube-system}
+SERVICE_ACCOUNT_NAME="${1:-tiller}"
+TILLER_NAMESPACE="${2:-kube-system}"
+export SERVICE_ACCOUNT_NAME
+export TILLER_NAMESPACE
 
 # echo "creating service account ${SERVICE_ACCOUNT_NAME} in namespace ${TILLER_NAMESPACE} with ClusterRoleBinding"
 # # If the namespace does not exist this will not work.
@@ -90,6 +91,12 @@ TILLER_NAMESPACE=${2:-kube-system}
 # helm init --service-account "${SERVICE_ACCOUNT_NAME}" --tiller-namespace "${TILLER_NAMESPACE}" --wait
 # helm repo update
 # echo "Installing Jenkins Helm Chart"
+
+kubectl -n kube-system create sa tiller
+kubectl create clusterrolebinding tiller-kube-system --clusterrole cluster-admin --serviceaccount=kube-system:tiller
+
+kubectl -n default create sa tiller
+kubectl create clusterrolebinding tiller-default --clusterrole cluster-admin --serviceaccount=default:tiller
 
 sed -e "s/{REPLACE_WITH_GITHUB_TOKEN}/$GITHUB_AUTH_TOKEN/g" \
  -e "s/{REPLACE_WITH_GITHUB_USERID}/$GITHUB_USERID/g" \
