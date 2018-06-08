@@ -68,13 +68,13 @@ See [How to rollout or rollback a deployment on a Kubernetes cluster?](https://r
 We've heard good things, but not experienced.
 
 #### Continuous Delivery Pipeline:
-[JenkinsX](https://jenkins-x.io/)
-[GitLab CI/CD](https://docs.gitlab.com/ee/ci/)
++ [JenkinsX](https://jenkins-x.io/)
++ [GitLab CI/CD](https://docs.gitlab.com/ee/ci/)
 
 #### Bake:
-[Kaniko](https://github.com/GoogleContainerTools/kaniko) (no more DinD DooD!)
++ [Kaniko](https://github.com/GoogleContainerTools/kaniko) - no more DinD DooD!
 
 ##### Deploy:
 + [WeaveWorks Flux](https://github.com/weaveworks/flux)
-[Skaffold](https://github.com/GoogleContainerTools/skaffold)
-[Helm](https://github.com/kubernetes/helm)
++ [Skaffold](https://github.com/GoogleContainerTools/skaffold)
++ [Helm](https://github.com/kubernetes/helm)

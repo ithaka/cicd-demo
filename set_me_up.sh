@@ -20,7 +20,8 @@ fi
 # brew install kubectl kubernetes-helm
 # minikube config set disk-size 40000MB
 
-#minikube start --disk-size 40g
+# minikube start --disk-size 40g
+
 # #minikube start --extra-config=apiserver.authorization-mode=RBAC
 # #kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
 # set -e
