@@ -120,6 +120,7 @@ Master:
         import org.jenkinsci.plugins.plaincredentials.*
         import org.jenkinsci.plugins.plaincredentials.impl.*
         import org.jenkinsci.plugins.workflow.multibranch.*
+        import org.jenkinsci.plugins.github_branch_source.*
 
         GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).useScriptSecurity=false
         // parameter
@@ -157,6 +158,8 @@ Master:
         String folderName = "cicd"
         String jobName = "cicd-demo"
         String jobScript = ""
+        String gitRepoOwner = "{REPLACE_WITH_GITHUB_USERID}"
+
         String gitRepo = "https://github.com/{REPLACE_WITH_GITHUB_USERID}/cicd-demo.git"
         String gitRepoName = "cicd-demo"
         String credentialsId = "github-token-user-password"
@@ -190,8 +193,21 @@ Master:
         String includes = "*"
         String excludes = ""
         boolean ignoreOnPushNotifications = false
-        GitSCMSource gitSCMSource = new GitSCMSource(id, remote, credentialsId, includes, excludes, ignoreOnPushNotifications)
-        BranchSource branchSource = new BranchSource(gitSCMSource)
+
+        //GitSCMSource gitSCMSource = new GitSCMSource(id, remote, credentialsId, includes, excludes, ignoreOnPushNotifications)
+        GitHubSCMSource gitHubSCMSource = new GitHubSCMSource(gitRepoOwner, gitRepoName)
+        gitHubSCMSource.setCredentialsId(credentialsId)
+
+        def traits = new ArrayList<>()
+        traits.add(new BranchDiscoveryTrait(2))
+        gitHubSCMSource.setTraits(traits)
+
+        BranchSource branchSource = new BranchSource(gitHubSCMSource)
+
+        //Not using github? Then use gitSCMSource
+        //GitSCMSource gitSCMSource = new GitSCMSource(id, remote, credentialsId, includes, excludes, ignoreOnPushNotifications)
+        //BranchSource branchSource = new BranchSource(gitSCMSource)
+
 
         // Disable triggering build
         //NoTriggerBranchProperty noTriggerBranchProperty = new NoTriggerBranchProperty()
