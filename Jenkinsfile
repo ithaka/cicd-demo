@@ -1,11 +1,14 @@
-podTemplate(label: 'test', cloud: 'kubernetes',
+// this guarantees the node will use this template
+def label = "cicd-build-pod-${UUID.randomUUID().toString()}"
+
+podTemplate(label: label, cloud: 'kubernetes',
         containers: [
                 containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
                 containerTemplate(name: 'kubectl', image: 'dtzar/helm-kubectl', ttyEnabled: true, command: 'cat'),
                 containerTemplate(name: 'node-alpine', image:'node:10.1.0-alpine', ttyEnabled: true, command: 'cat')
         ], volumes: [hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]){
 
-    node("test") {
+    node(label) {
       source_code = checkout(scm)
       GIT_COMMIT = source_code.GIT_COMMIT.substring(0, 6).toLowerCase()
       GIT_BRANCH = source_code.GIT_BRANCH.replaceAll('origin/', '').toLowerCase()
