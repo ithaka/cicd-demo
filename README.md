@@ -10,15 +10,15 @@ https://docs.google.com/presentation/d/1hPqTTd8auXvezHbL5u-64NsO4Ka9y4gNYbCJQanP
 
 * From GitLab's Pipeline
 
-![alt text](../images/gitlab-devops-pipeline.png)
+![alt text](./images/gitlab-devops-pipeline.png)
 
-* [Workflow Example](../images/Continuous_Delivery_Pipeline.pdf)
+* [Workflow Example](./images/Continuous_Delivery_Pipeline.pdf)
 
-<img src="../images/Continuous_Delivery_Pipeline.svg" width="800" />
+<img src="./images/Continuous_Delivery_Pipeline.svg" width="800" />
 
-From [Continuous Delivery on Wikipedia](https://en.wikipedia.org/wiki/Continuous_delivery) - [Download as PNG](../images/Continuous_Delivery_process_diagram.png)
+From [Continuous Delivery on Wikipedia](https://en.wikipedia.org/wiki/Continuous_delivery) - [Download as PNG](./images/Continuous_Delivery_process_diagram.png)
 
-<img src="../images/Continuous_Delivery_process_diagram.svg" width="800" />
+<img src="./images/Continuous_Delivery_process_diagram.svg" width="800" />
 
 
 ### Pipeline As Code
@@ -33,22 +33,22 @@ From [Kubecon 2017 Deploying to Kubernetes Thousands of Times Per/Day - Dan Garf
 
 In the Typical Dev/Release Process, Staging becomes a bottleneck, so the solution is to Shift Left so earlier feedback is continuously provided on the feature branch.
 
-![alt text](../images/ShiftLeft.png)
+![alt text](./images/ShiftLeft.png)
 
 ### Deployment Strategies
 
 From [k8s-deployment-strategies](https://github.com/ContainerSolutions/k8s-deployment-strategies)
 
 #### Matrix
-![Deployment strategies](../images/zdecision-diagram.png)
+![Deployment strategies](./images/zdecision-diagram.png)
 
 #### Blue/Green:
 
-![Kubernetes deployment blue-green](../images/grafana-blue-green.png)
+![Kubernetes deployment blue-green](./images/grafana-blue-green.png)
 
 #### Canary:
 
-![Kubernetes deployment canary](../images/grafana-canary.png)
+![Kubernetes deployment canary](./images/grafana-canary.png)
 
 ### Rollback
 See [How to rollout or rollback a deployment on a Kubernetes cluster?](https://romain.dorgueil.net/blog/en/tips/2016/08/27/rollout-rollback-kubernetes-deployment.html)
@@ -68,13 +68,13 @@ See [How to rollout or rollback a deployment on a Kubernetes cluster?](https://r
 We've heard good things, but not experienced.
 
 #### Continuous Delivery Pipeline:
-[JenkinsX](https://jenkins-x.io/)
-[GitLab CI/CD](https://docs.gitlab.com/ee/ci/)
++ [JenkinsX](https://jenkins-x.io/)
++ [GitLab CI/CD](https://docs.gitlab.com/ee/ci/)
 
 #### Bake:
-[Kaniko](https://github.com/GoogleContainerTools/kaniko) (no more DinD DooD!)
++ [Kaniko](https://github.com/GoogleContainerTools/kaniko) - no more DinD DooD!
 
 ##### Deploy:
 + [WeaveWorks Flux](https://github.com/weaveworks/flux)
-[Skaffold](https://github.com/GoogleContainerTools/skaffold)
-[Helm](https://github.com/kubernetes/helm)
++ [Skaffold](https://github.com/GoogleContainerTools/skaffold)
++ [Helm](https://github.com/kubernetes/helm)

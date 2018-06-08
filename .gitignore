@@ -320,3 +320,5 @@ tags
 
 .idea/*
 # End of https://www.gitignore.io/api/vim,ruby,node,emacs,eclipse,intellij
+jenkins/values.yaml
+github-token-instructions/secret_token.sh

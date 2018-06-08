@@ -25,7 +25,7 @@ podTemplate(label: 'test', cloud: 'kubernetes',
           }
           container('kubectl'){
             stage('deploy app'){
-                sh "helm upgrade --install --force --tiller-namespace default --values ./hello-world/chart/values.yaml --set tag=${VERSION_IDENTIFIER} hello-world-app-${GIT_BRANCH} ./hello-world/chart"
+                sh "helm upgrade --install --force --service-account tiller --tiller-namespace default --values ./hello-world/chart/values.yaml --set tag=${VERSION_IDENTIFIER} hello-world-app-${GIT_BRANCH} ./hello-world/chart"
             }
           }
           parallel(
@@ -48,10 +48,10 @@ podTemplate(label: 'test', cloud: 'kubernetes',
           }
           container('kubectl'){
                 stage('undeploy app'){
-                    sh "helm delete --tiller-namespace default hello-world-app-${GIT_BRANCH}"
+                    sh "helm delete --service-account tiller --tiller-namespace default hello-world-app-${GIT_BRANCH}"
                 }
                 stage('deploy to prod'){
-                    sh "helm upgrade --install --force --tiller-namespace default --namespace prod --values ./hello-world/chart/values.yaml --set tag=${VERSION_IDENTIFIER} hello-world-app ./hello-world/chart"
+                    sh "helm upgrade --service-account tiller --install --force --tiller-namespace default --namespace prod --values ./hello-world/chart/values.yaml --set tag=${VERSION_IDENTIFIER} hello-world-app ./hello-world/chart"
                 }
             }
 
@@ -60,7 +60,7 @@ podTemplate(label: 'test', cloud: 'kubernetes',
       catch(e){
         container('kubectl'){
             stage('undeploy app'){
-                sh "helm delete --tiller-namespace default hello-world-app-${GIT_BRANCH}"
+                sh "helm delete --service-account tiller --tiller-namespace default hello-world-app-${GIT_BRANCH}"
             }
         }
         throw e
