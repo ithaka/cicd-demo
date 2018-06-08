@@ -1,0 +1,367 @@
+# Default values for jenkins.
+# This is a YAML-formatted file.
+# Declare name/value pairs to be passed into your templates.
+# name: value
+
+## Overrides for generated resource names
+# See templates/_helpers.tpl
+# nameOverride:
+# fullnameOverride:
+
+Master:
+  Name: jenkins-master
+  Image: "jenkins/jenkins"
+  ImageTag: "lts"
+  ImagePullPolicy: "Always"
+# ImagePullSecret: jenkins
+  Component: "jenkins-master"
+  UseSecurity: true
+  AdminUser: admin
+  AdminPassword: admin
+  Cpu: "200m"
+  Memory: "256Mi"
+  # Environment variables that get added to the init container (useful for e.g. http_proxy)
+  # InitContainerEnv:
+  #   - name: http_proxy
+  #     value: "http://192.168.64.1:3128"
+  # ContainerEnv:
+  #   - name: http_proxy
+  #     value: "http://192.168.64.1:3128"
+  # Set min/max heap here if needed with:
+  # JavaOpts: "-Xms512m -Xmx512m"
+  # JenkinsOpts: ""
+  # JenkinsUriPrefix: "/jenkins"
+  # Set RunAsUser to 1000 to let Jenkins run as non-root user 'jenkins' which exists in 'jenkins/jenkins' docker image.
+  # When setting RunAsUser to a different value than 0 also set FsGroup to the same value:
+  RunAsUser: 1000
+  # FsGroup: <will be omitted in deployment if RunAsUser is 0>
+  ServicePort: 8080
+  # For minikube, set this to NodePort, elsewhere use LoadBalancer
+  # Use ClusterIP if your setup includes ingress controller
+  ServiceType: NodePort
+  # Master Service annotations
+  ServiceAnnotations: {}
+  #   service.beta.kubernetes.io/aws-load-balancer-backend-protocol: https
+  # Used to create Ingress record (should used with ServiceType: ClusterIP)
+  # HostName: jenkins.cluster.local
+  # NodePort: <to set explicitly, choose port between 30000-32767
+  ContainerPort: 8080
+  # Enable Kubernetes Liveness and Readiness Probes
+  HealthProbes: true
+  HealthProbesTimeout: 60
+  # ~2 minutes to allow Jenkins to restart when upgrading plugins
+  HealthProbeLivenessFailureThreshold: 12
+  SlaveListenerPort: 50000
+  DisabledAgentProtocols:
+    - JNLP-connect
+    - JNLP2-connect
+  CSRF:
+    DefaultCrumbIssuer:
+      Enabled: true
+      ProxyCompatability: true
+  CLI: false
+  # Kubernetes service type for the JNLP slave service
+  # SETTING THIS TO "LoadBalancer" IS A HUGE SECURITY RISK: https://github.com/kubernetes/charts/issues/1341
+  SlaveListenerServiceType: ClusterIP
+  SlaveListenerServiceAnnotations: {}
+  LoadBalancerSourceRanges:
+  - 0.0.0.0/0
+  # Optionally assign a known public LB IP
+  # LoadBalancerIP: 1.2.3.4
+  # Optionally configure a JMX port
+  # requires additional JavaOpts, ie
+  # JavaOpts: >
+  #   -Dcom.sun.management.jmxremote.port=4000
+  #   -Dcom.sun.management.jmxremote.authenticate=false
+  #   -Dcom.sun.management.jmxremote.ssl=false
+  # JMXPort: 4000
+  # List of plugins to be install during Jenkins master start
+  InstallPlugins:
+    - kubernetes:1.6.0
+    - workflow-aggregator:2.5
+    - workflow-job:2.21
+    - credentials
+    - credentials-binding:1.16
+    - git:3.9.0
+    - git-client
+    - job-dsl
+    - github
+    - github-api
+    - ghprb:1.40.0
+    - github-branch-source:2.3.4
+    - startup-trigger
+    - blueocean:1.5.0
+
+  # Used to approve a list of groovy functions in pipelines used the script-security plugin. Can be viewed under /scriptApproval
+  ScriptApproval:
+    - "method groovy.json.JsonSlurperClassic parseText java.lang.String"
+    - "new groovy.json.JsonSlurperClassic"
+  # List of groovy init scripts to be executed during Jenkins master start
+  InitScripts:
+   - |
+        import com.cloudbees.hudson.plugins.folder.*
+        import com.cloudbees.jenkins.plugins.sshcredentials.impl.*
+        import com.cloudbees.plugins.credentials.*
+        import com.cloudbees.plugins.credentials.common.*
+        import com.cloudbees.plugins.credentials.domains.*
+        import com.cloudbees.plugins.credentials.impl.*
+        import hudson.plugins.sshslaves.*
+        import hudson.util.PersistedList
+        import hudson.util.Secret
+        import java.nio.file.Files
+        import javaposse.jobdsl.plugin.GlobalJobDslSecurityConfiguration
+        import jenkins.branch.*
+        import jenkins.model.*
+        import jenkins.model.GlobalConfiguration
+        import jenkins.model.Jenkins
+        import jenkins.plugins.git.*
+        import org.apache.commons.fileupload.*
+        import org.apache.commons.fileupload.disk.*
+        import org.jenkinsci.plugins.plaincredentials.*
+        import org.jenkinsci.plugins.plaincredentials.impl.*
+        import org.jenkinsci.plugins.workflow.multibranch.*
+
+        GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).useScriptSecurity=false
+        // parameter
+        Integer numberOfExecutors = 5
+        // get Jenkins instance
+        Jenkins jenkins = Jenkins.instance // saves some typing
+
+        // set the number of slaves
+        jenkins.setNumExecutors(numberOfExecutors)
+        // save current Jenkins state to disk
+
+        jenkins.save()
+        domain = Domain.global()
+        store = Jenkins.instance.getExtensionList('com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0].getStore()
+
+        // scope, id, description, username, password
+        // git clone https://x-access-token:REPLACE_WITH_TOKEN@github.com/username/repo.git
+        usernameAndPassword = new UsernamePasswordCredentialsImpl(
+          CredentialsScope.GLOBAL,
+          "github-token-user-password",
+          "Jenkins Slave with Password Configuration",
+          "x-access-token",
+          "{REPLACE_WITH_GITHUB_TOKEN}"
+        )
+
+        secretText = new StringCredentialsImpl(
+        CredentialsScope.GLOBAL,
+        "github-token-only",
+        "Secret Text Description",
+        Secret.fromString("{REPLACE_WITH_GITHUB_TOKEN}"))
+
+        store.addCredentials(domain, usernameAndPassword)
+        store.addCredentials(domain, secretText)
+        // Bring some values in from ansible using the jenkins_script modules wierd "args" approach (these are not gstrings)
+        String folderName = "cicd"
+        String jobName = "cicd-demo"
+        String jobScript = ""
+        String gitRepo = "https://github.com/{REPLACE_WITH_GITHUB_USERID}/cicd-demo.git"
+        String gitRepoName = "cicd-demo"
+        String credentialsId = "github-token-user-password"
+
+
+
+        // Get the folder where this job should be
+        def folder = jenkins.getItem(folderName)
+        // Create the folder if it doesn't exist
+        if (folder == null) {
+          folder = jenkins.createProject(Folder.class, folderName)
+        }
+
+        // Multibranch creation/update
+        WorkflowMultiBranchProject mbp
+        def item = folder.getItem(jobName)
+        if ( item != null ) {
+          // Update case
+          mbp = (WorkflowMultiBranchProject) item
+        } else {
+          // Create case
+          mbp = folder.createProject(WorkflowMultiBranchProject.class, jobName)
+        }
+
+        // Configure the script this MBP uses
+        mbp.getProjectFactory().setScriptPath(jobScript)
+
+        // Add git repo
+        String id = null
+        String remote = gitRepo
+        String includes = "*"
+        String excludes = ""
+        boolean ignoreOnPushNotifications = false
+        GitSCMSource gitSCMSource = new GitSCMSource(id, remote, credentialsId, includes, excludes, ignoreOnPushNotifications)
+        BranchSource branchSource = new BranchSource(gitSCMSource)
+
+        // Disable triggering build
+        //NoTriggerBranchProperty noTriggerBranchProperty = new NoTriggerBranchProperty()
+
+        // Can be used later to not trigger/trigger some set of branches
+        //NamedExceptionsBranchPropertyStrategy.Named nebrs_n = new NamedExceptionsBranchPropertyStrategy.Named("change-this", noTriggerBranchProperty)
+
+        // Add an example exception
+        // BranchProperty defaultBranchProperty = null;
+        // NamedExceptionsBranchPropertyStrategy.Named nebrs_n = new NamedExceptionsBranchPropertyStrategy.Named("change-this", defaultBranchProperty)
+        // NamedExceptionsBranchPropertyStrategy.Named[] nebpsa = [ nebrs_n ]
+
+        // BranchProperty[] bpa = [noTriggerBranchProperty]
+        // NamedExceptionsBranchPropertyStrategy nebps = new NamedExceptionsBranchPropertyStrategy(bpa, nebpsa)
+
+        // branchSource.setStrategy(nebps)
+
+        // Remove and replace?
+        PersistedList sources = mbp.getSourcesList()
+        sources.clear()
+        sources.add(branchSource)
+
+  # Kubernetes secret that contains a 'credentials.xml' for Jenkins
+  # CredentialsXmlSecret: jenkins-credentials
+  # Kubernetes secret that contains files to be put in the Jenkins 'secrets' directory,
+  # useful to manage encryption keys used for credentials.xml for instance (such as
+  # master.key and hudson.util.Secret)
+  # SecretsFilesSecret: jenkins-secrets
+  # Jenkins XML job configs to provision
+  # Jobs: |-
+  #   seed: |-
+  #     <?xml version='1.1' encoding='UTF-8'?>
+  #     <project>
+  #       <actions/>
+  #       <description></description>
+  #       <keepDependencies>false</keepDependencies>
+  #       <properties>
+  #         <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.29.0">
+  #           <projectUrl>https://github.com/{REPLACE_WITH_GITHUB_USERID}/cicd-demo/</projectUrl>
+  #           <displayName></displayName>
+  #         </com.coravy.hudson.plugins.github.GithubProjectProperty>
+  #       </properties>
+  #       <scm class="hudson.plugins.git.GitSCM" plugin="git@3.9.0">
+  #         <configVersion>2</configVersion>
+  #         <userRemoteConfigs>
+  #           <hudson.plugins.git.UserRemoteConfig>
+  #             <url>https://github.com/{REPLACE_WITH_GITHUB_USERID}/cicd-demo.git</url>
+  #             <credentialsId>github-token-user-password</credentialsId>
+  #           </hudson.plugins.git.UserRemoteConfig>
+  #         </userRemoteConfigs>
+  #         <branches>
+  #           <hudson.plugins.git.BranchSpec>
+  #             <name>*/master</name>
+  #           </hudson.plugins.git.BranchSpec>
+  #         </branches>
+  #         <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+  #         <submoduleCfg class="list"/>
+  #         <extensions/>
+  #       </scm>
+  #       <canRoam>true</canRoam>
+  #       <disabled>false</disabled>
+  #       <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  #       <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  #       <triggers>
+  #         <org.jvnet.hudson.plugins.triggers.startup.HudsonStartupTrigger plugin="startup-trigger-plugin@2.9.3">
+  #           <spec></spec>
+  #           <label>master</label>
+  #           <quietPeriod>0</quietPeriod>
+  #           <runOnChoice>ON_CONNECT</runOnChoice>
+  #         </org.jvnet.hudson.plugins.triggers.startup.HudsonStartupTrigger>
+  #       </triggers>
+  #       <concurrentBuild>false</concurrentBuild>
+  #       <builders>
+  #         <javaposse.jobdsl.plugin.ExecuteDslScripts plugin="job-dsl@1.69">
+  #           <targets>**/Jenkinsfile</targets>
+  #           <usingScriptText>false</usingScriptText>
+  #           <sandbox>true</sandbox>
+  #           <ignoreExisting>false</ignoreExisting>
+  #           <ignoreMissingFiles>true</ignoreMissingFiles>
+  #           <failOnMissingPlugin>false</failOnMissingPlugin>
+  #           <unstableOnDeprecation>false</unstableOnDeprecation>
+  #           <removedJobAction>IGNORE</removedJobAction>
+  #           <removedViewAction>IGNORE</removedViewAction>
+  #           <removedConfigFilesAction>IGNORE</removedConfigFilesAction>
+  #           <lookupStrategy>JENKINS_ROOT</lookupStrategy>
+  #         </javaposse.jobdsl.plugin.ExecuteDslScripts>
+  #       </builders>
+  #       <publishers/>
+  #       <buildWrappers/>
+  #     </project>
+  CustomConfigMap: false
+  # Node labels and tolerations for pod assignment
+  # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+  # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
+  NodeSelector: {}
+  Tolerations: {}
+
+  Ingress:
+    ApiVersion: extensions/v1beta1
+    Annotations:
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+
+    TLS:
+    # - secretName: jenkins.cluster.local
+    #   hosts:
+    #     - jenkins.cluster.local
+
+Agent:
+  Enabled: true
+  Image: jenkins/jnlp-slave
+  ImageTag: 3.10-1
+# ImagePullSecret: jenkins
+  Component: "jenkins-slave"
+  Privileged: false
+  Cpu: "200m"
+  Memory: "256Mi"
+  # You may want to change this to true while testing a new image
+  AlwaysPullImage: false
+  # You can define the volumes that you want to mount for this container
+  # Allowed types are: ConfigMap, EmptyDir, HostPath, Nfs, Pod, Secret
+  # Configure the attributes as they appear in the corresponding Java class for that type
+  # https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/main/java/org/csanchez/jenkins/plugins/kubernetes/volumes
+  volumes:
+  # - type: Secret
+  #   secretName: mysecret
+  #   mountPath: /var/myapp/mysecret
+  NodeSelector: {}
+  # Key Value selectors. Ex:
+  # jenkins-agent: v1
+
+Persistence:
+  Enabled: false
+  ## A manually managed Persistent Volume and Claim
+  ## Requires Persistence.Enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  # ExistingClaim:
+
+  ## jenkins data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # StorageClass: "-"
+
+  Annotations: {}
+  AccessMode: ReadWriteOnce
+  Size: 8Gi
+  volumes:
+  #  - name: nothing
+  #    emptyDir: {}
+  mounts:
+  #  - mountPath: /var/nothing
+  #    name: nothing
+  #    readOnly: true
+
+NetworkPolicy:
+  # Enable creation of NetworkPolicy resources.
+  Enabled: false
+  # For Kubernetes v1.4, v1.5 and v1.6, use 'extensions/v1beta1'
+  # For Kubernetes v1.7, use 'networking.k8s.io/v1'
+  ApiVersion: extensions/v1beta1
+
+## Install Default RBAC roles and bindings
+rbac:
+  install: true
+  serviceAccountName: jenkins
+  # RBAC api version (currently either v1beta1 or v1alpha1)
+  apiVersion: v1beta1
+  # Cluster role reference
+  roleRef: cluster-admin
