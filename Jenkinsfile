@@ -60,7 +60,7 @@ podTemplate(label: 'test', cloud: 'kubernetes',
       catch(e){
         container('kubectl'){
             stage('undeploy app'){
-                sh "helm delete --service-account tiller --tiller-namespace default hello-world-app-${GIT_BRANCH}"
+                sh "helm delete --tiller-namespace default hello-world-app-${GIT_BRANCH}"
             }
         }
         throw e
